@@ -12,3 +12,11 @@ typedef struct {
     char letra;
     float frequencia;
 } FrequenciaLetra;
+
+void criptografar(char *texto, int chave);
+void descriptografar(char *texto, int chave);
+void calcular_frequencias(char *texto, FrequenciaLetra *freq);
+int adivinhar_chave(FrequenciaLetra *freqTexto);
+int ler_arquivo(const char *nome_arquivo, char *texto);
+int salvar_arquivo(const char *nome_arquivo, const char *texto);
+

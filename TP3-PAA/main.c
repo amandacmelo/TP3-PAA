@@ -6,6 +6,7 @@
 #include <ctype.h>     // Funções para manipulação de caracteres (ispunct, tolower)
 #include "CasamentoExato/ForcaBruta.h"
 #include "CasamentoExato/KMP.h"
+#include "CifraDeslocamento/CifraDeslocamento.h"
 
 
 void removeAcentosPontuacao(char *str) {
@@ -111,6 +112,13 @@ char* carregaTexto(const char* nomeArquivo) {
 int main() {
     char nomeArquivo[100]; 
     char padrao[100];      
+    char texto[tamanho_maximo];
+    char nome_arquivo[100];
+    char nome_saida[120];
+    int opcao, chave;
+    FrequenciaLetra frequencias[tamanho_alfabeto];
+    
+    srand(time(NULL));  // Inicializa gerador de números aleatórios
     
     // Lê nome do arquivo
     printf("Digite o nome do arquivo de texto: ");

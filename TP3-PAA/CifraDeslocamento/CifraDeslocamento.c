@@ -2,7 +2,7 @@
 #include <float.h>
 
 // Tabela de frequências do português
-const FrequenciaLetra FREQ_PT[tamanho_alfabeto] = { //
+const FrequenciaLetra FREQ_PT[tamanho_alfabeto] = { 
     {'a', 14.63}, {'b', 1.04}, {'c', 3.88}, {'d', 4.99}, {'e', 12.57},
     {'f', 1.02}, {'g', 1.30}, {'h', 1.28}, {'i', 6.18}, {'j', 0.40},
     {'k', 0.02}, {'l', 2.78}, {'m', 4.74}, {'n', 5.05}, {'o', 10.73},
@@ -83,30 +83,6 @@ int adivinhar_chave(FrequenciaLetra *freqTexto) {
     return (26 - chave_encontrada) % 26;
 }
 
-// Função para ler arquivo
-/*int ler_arquivo(const char *nome_arquivo, char *texto) {
-    FILE *fp = fopen(nome_arquivo, "r");
-    if (!fp) {
-        return 0;
-    }
-    
-    size_t lido = fread(texto, 1, tamanho_maximo - 1, fp);
-    texto[lido] = '\0';
-    fclose(fp);
-    return 1;
-}
-
-// Função para salvar arquivo
-int salvar_arquivo(const char *nome_arquivo, const char *texto) {
-    FILE *fp = fopen(nome_arquivo, "w");
-    if (!fp) {
-        return 0;
-    }
-    
-    fprintf(fp, "%s", texto);
-    fclose(fp);
-    return 1;
-}*/
 
 int ler_arquivo(const char *nome_arquivo, char *texto) {
     FILE *fp = fopen(nome_arquivo, "r");
