@@ -179,10 +179,10 @@ int main() {
             // Executa os dois algoritmos
             printf("\n===== Busca usando Força Bruta =====\n");
             forcaBruta(texto, padrao);
-            printf("\n====================================\n");
+            printf("====================================\n");
             printf("\n========= Busca usando KMP =========\n");
             KMP(texto, padrao);
-            printf("\n===================================\n");
+            printf("===================================\n");
             free(texto);
             printf("Pressione Enter para continuar... \n");
             getchar();
@@ -239,6 +239,8 @@ int main() {
                     system("clear");
                     continue;
                 }
+
+                removeAcentosPontuacao(texto_cifra);  // Remove acentos e pontuação do texto
                 
                 if (subopcao == 1 || subopcao == 2) {
                     printf("Digite a chave (numero inteiro): ");
@@ -269,6 +271,23 @@ int main() {
                 }
                 
                 printf("\nConteudo do arquivo:\n%s\n", texto_cifra);
+                // Se usou chave aleatória, calcula e mostra frequências
+                if (subopcao == 3) {
+                    calcular_frequencias(texto_cifra, frequencias);
+                    
+                    printf("\nFrequencias encontradas:\n");
+                    printf("Letra | Frequencia\n");
+                    printf("--------------------\n");
+                    for (int i = 0; i < tamanho_alfabeto; i++) {
+                        printf("%c     | %.2f%%\n", 
+                            frequencias[i].letra, 
+                            frequencias[i].frequencia);
+                    }
+                    
+                    int chave_estimada = adivinhar_chave(frequencias);
+                    printf("\nChave estimada: %d\n", chave_estimada);
+                    printf("Chave real: %d\n", chave);
+                }
                 printf("\nPressione Enter para continuar... \n");
                 getchar();  // Aguarda o Enter antes de continuar
                 system("clear");

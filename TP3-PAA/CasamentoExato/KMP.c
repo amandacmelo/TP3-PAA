@@ -61,11 +61,16 @@ void KMP(char* texto, char* padrao) {
     }
 
     if (ocorrencias == 0) {
-        printf("\nPadrão não encontrado no texto.\n");
+        printf("Padrão não encontrado no texto.\n");
     }
+   
     // Calcula e mostra tempo gasto
     clock_t fim = clock();
     double tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+
+    printf("------------------------------------\n");
+    printf("Tempo KMP: %f segundos\n", tempo);
+    printf("Total de ocorrências: %d\n", ocorrencias);
 
     // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
     FILE *arquivo = fopen("/home/leticia/TP3-PAA/Grafico/dadosKMP.txt", "a+");
@@ -79,10 +84,5 @@ void KMP(char* texto, char* padrao) {
 
     // Fecha o arquivo
     fclose(arquivo);
-    
-
-    printf("\nTempo KMP: %f segundos\n", tempo);
-    printf("Total de ocorrências: %d\n", ocorrencias);
-    
     free(lps);  // Libera memória da tabela LPS
 }
