@@ -73,7 +73,7 @@ void KMP(char* texto, char* padrao) {
     printf("Total de ocorrências: %d\n", ocorrencias);
 
     // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
-    FILE *arquivo = fopen("/home/leticia/TP3-PAA/Grafico/dadosKMP.txt", "a+");
+    FILE *arquivo = fopen("Grafico/grafico.py", "a+");
     if (arquivo == NULL) {
         printf("\nErro ao abrir o arquivo para construcao do grafico!\n");
         return;
