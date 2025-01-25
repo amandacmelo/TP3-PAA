@@ -3,6 +3,7 @@
 #include <string.h>   // Para manipulação de strings (strlen)
 #include <stdlib.h>   // Para alocação dinâmica (malloc, free)
 #include <time.h>     // Para medir tempo de execução
+#include <unistd.h>   // Para função sleep
 #include <ctype.h>     // Funções para manipulação de caracteres (ispunct, tolower)
 #include "CasamentoExato/ForcaBruta.h"
 #include "CasamentoExato/KMP.h"
@@ -106,43 +107,181 @@ char* carregaTexto(const char* nomeArquivo) {
     return texto;
 }
 
-
-
 // Função principal
-int main() {
-    char nomeArquivo[100]; 
-    char padrao[100];      
-    char texto[tamanho_maximo];
-    char nome_arquivo[100];
-    char nome_saida[120];
-    int opcao, chave;
-    FrequenciaLetra frequencias[tamanho_alfabeto];
-    
+int main() {  
+    int opcao;
     srand(time(NULL));  // Inicializa gerador de números aleatórios
     
-    // Lê nome do arquivo
-    printf("Digite o nome do arquivo de texto: ");
-    scanf("%s", nomeArquivo);
+    while (1){
+        printf("\n--------------- MENU PRINCIPAL -------------\n");
+        printf("1. Casamento de padrões\n");
+        printf("2. Cifra de deslocamento\n");
+        printf("3. Sair\n");
+        printf("--------------------------------------------\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &opcao);
+        getchar(); // Limpa o buffer
+        printf("--------------------------------------------\n");
     
-    // Lê padrão a ser buscado
-    printf("Digite o padrão a ser buscado: ");
-    scanf(" %[^\n]s", padrao);   // Lê linha inteira incluindo espaços
+        if (opcao < 1 || opcao > 3) {
+            printf("\nOpção inválida!\n");
+            sleep(1);
+            system("clear");
+            continue;
+        }
+        system("clear"); 
+       
+        switch (opcao){
+        case 1:{
+            
+            char nomeArquivo[100]; 
+            char padrao[100];  
+            printf("\n----------- CASAMENTO DE PADROES -----------\n");
+            printf("Digite o nome do arquivo de texto: ");
+            fgets(nomeArquivo, sizeof(nomeArquivo), stdin);
+            nomeArquivo[strcspn(nomeArquivo, "\n")] = 0;  // Remove newline
 
-    // Carrega texto do arquivo
-    char* texto = carregaTexto(nomeArquivo);
-    if (texto == NULL) {
-        return 1;  // Retorna com erro se falhou
+            // Verifica se o nome do arquivo está vazio
+            if (strcmp(nomeArquivo, "") == 0) {
+                printf("Por favor, carregue antes um arquivo de dados! \n");
+                printf("Pressione qualquer tecla para continuar... \n");
+                getchar(); 
+                system("clear");
+                continue;
+            }
+                    
+            // Lê padrão a ser buscado
+            printf("Digite o padrão a ser buscado: ");
+            scanf(" %[^\n]s", padrao);   // Lê linha inteira incluindo espaços
+            printf("--------------------------------------------\n");
+
+            // Verifica se o nome do arquivo está vazio
+           if (strcmp(nomeArquivo, "") == 0) {
+                printf("Por favor, carregue antes um arquivo de dados! \n");
+                printf("Pressione qualquer tecla para continuar... \n");
+                getchar(); 
+                system("clear");
+                continue;
+            }   
+            // Carrega texto do arquivo
+            char* texto = carregaTexto(nomeArquivo);
+            if (texto == NULL) {
+                printf("Erro: Arquivo nao encontrado!\n");
+                sleep(1.5);
+                system("clear");
+                continue;
+            }
+
+            removeAcentosPontuacao(texto);  // Remove acentos e pontuação do texto
+            removeAcentosPontuacao(padrao); // Remove acentos e pontuação do padrão
+        
+            
+            // Executa os dois algoritmos
+            printf("\n===== Busca usando Força Bruta =====\n");
+            forcaBruta(texto, padrao);
+            printf("\n====================================\n");
+            printf("\n========= Busca usando KMP =========\n");
+            KMP(texto, padrao);
+            printf("\n===================================\n");
+            free(texto);
+            printf("Pressione Enter para continuar... \n");
+            getchar();
+            getchar();
+            system("clear");
+            break;
+        }
+        case 2:
+        {
+            char texto_cifra[tamanho_maximo];
+            char nome_arquivo[100];
+            int subopcao, chave;
+            FrequenciaLetra frequencias[tamanho_alfabeto];
+            
+            while (1) {
+                printf("\n---------- CIFRA DE DESLOCAMENTO -----------\n");
+                printf("1. Criptografar arquivo\n");
+                printf("2. Descriptografar arquivo\n");
+                printf("3. Usar chave aleatoria\n");
+                printf("4. Voltar ao menu principal\n");
+                printf("--------------------------------------------\n");
+                
+                printf("\nEscolha uma opcao: ");
+                scanf("%d", &subopcao);
+                getchar();  // Limpa o buffer
+
+                if (subopcao < 1 || subopcao > 4) {
+                    printf("\nOpção inválida!\n");
+                    sleep(1);
+                    system("clear");
+                    continue;
+                }
+                
+                if (subopcao == 4) {
+                    system("clear");
+                    break;  // Sai do submenu e volta ao menu principal
+                }
+                
+                printf("Digite o nome do arquivo de entrada: ");
+                fgets(nome_arquivo, sizeof(nome_arquivo), stdin);
+                nome_arquivo[strcspn(nome_arquivo, "\n")] = 0;  // Remove \n
+                
+                if (strcmp(nome_arquivo, "") == 0) {
+                    printf("Por favor, carregue antes um arquivo de dados! \n");
+                    printf("Pressione qualquer tecla para continuar... \n");
+                    getchar(); 
+                    system("clear");
+                    continue;
+                }    
+                
+                if (!ler_arquivo(nome_arquivo, texto_cifra)) {
+                    printf("Erro: Arquivo nao encontrado!\n");
+                    sleep(1);
+                    system("clear");
+                    continue;
+                }
+                
+                if (subopcao == 1 || subopcao == 2) {
+                    printf("Digite a chave (numero inteiro): ");
+                    scanf("%d", &chave);
+                    getchar();  // Limpa o buffer
+                    chave = ((chave % 26) + 26) % 26;  // Normaliza a chave
+                } else if (subopcao == 3) {
+                    chave = rand() % 25 + 1;  // 1 a 25
+                    printf("\nChave aleatoria gerada: %d\n", chave);
+                }
+                
+                if (subopcao == 1 || subopcao == 3) {
+                    criptografar(texto_cifra, chave);
+                    if (!salvar_arquivo("texto_criptografado.txt", texto_cifra)) {
+                        printf("Erro ao salvar arquivo criptografado!\n");
+                        continue;
+                    }
+                    printf("--------------------------------------------\n");
+                    printf("\nResultado salvo em: texto_criptografado.txt\n");
+                } else if (subopcao == 2) {
+                    descriptografar(texto_cifra, chave);
+                    if (!salvar_arquivo("texto_descriptografado.txt", texto_cifra)) {
+                        printf("Erro ao salvar arquivo descriptografado!\n");
+                        continue;
+                    }
+                    printf("--------------------------------------------\n");
+                    printf("\nResultado salvo em: texto_descriptografado.txt\n");
+                }
+                
+                printf("\nConteudo do arquivo:\n%s\n", texto_cifra);
+                printf("\nPressione Enter para continuar... \n");
+                getchar();  // Aguarda o Enter antes de continuar
+                system("clear");
+            }
+            break;
+        }
+        case 3:
+            printf("Saindo.... \n");
+            sleep(1);
+            printf("FIM.\n");
+            exit(0);
+        }
     }
-    removeAcentosPontuacao(texto);  // Remove acentos e pontuação do texto
-    removeAcentosPontuacao(padrao); // Remove acentos e pontuação do padrão
- 
-    // Executa os dois algoritmos
-    printf("\n=== Busca usando Força Bruta ===\n");
-    forcaBruta(texto, padrao);
     
-    printf("\n=== Busca usando KMP ===\n");
-    KMP(texto, padrao);
-    
-    free(texto);  // Libera memória alocada
     return 0;
 }

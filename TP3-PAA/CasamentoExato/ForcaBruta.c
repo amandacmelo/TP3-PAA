@@ -22,17 +22,20 @@ void forcaBruta(char* texto, char* padrao) {
             printf("Padrão encontrado na posição %d\n", i);
             ocorrencias++;
         }
+       
     }
-    
+
+    if (ocorrencias == 0) {
+        printf("\nPadrão não encontrado no texto.\n");
+    }
     // Calcula e mostra o tempo gasto
     clock_t fim = clock(); 
     double tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
 
-
     // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
     FILE *arquivo = fopen("/home/leticia/TP3-PAA/Grafico/dadosForcaBruta.txt", "a+");
     if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo!\n");
+        printf("\nErro ao abrir o arquivo para construcao do grafico!\n");
         return;
     }
 

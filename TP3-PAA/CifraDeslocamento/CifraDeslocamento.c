@@ -127,27 +127,26 @@ int salvar_arquivo(const char *nome_arquivo, const char *texto) {
     return 1;
 }
 
-int main() {
+/*int main() {
     char texto[tamanho_maximo];
     char nome_arquivo[100];
     char nome_saida[120];
-    int opcao, chave;
+    int subopcao, chave;
     FrequenciaLetra frequencias[tamanho_alfabeto];
     
     srand(time(NULL));  // Inicializa gerador de números aleatórios
     
     while (1) {
-        printf("\n=== Menu ===\n");
         printf("1. Criptografar arquivo\n");
         printf("2. Descriptografar arquivo\n");
         printf("3. Usar chave aleatoria\n");
-        printf("4. Sair\n");
+        printf("Voltar ao menu principal");
         
         printf("\nEscolha uma opcao: ");
-        scanf("%d", &opcao);
+        scanf("%d", &subopcao);
         getchar();  // Limpa o buffer
         
-        if (opcao == 4) break;
+        if (subopcao == 4) break;
         
         printf("Digite o nome do arquivo de entrada: ");
         fgets(nome_arquivo, sizeof(nome_arquivo), stdin);
@@ -158,23 +157,23 @@ int main() {
             continue;
         }
         
-        if (opcao == 1 || opcao == 2) {
+        if (subopcao == 1 || subopcao == 2) {
             printf("Digite a chave (numero inteiro): ");
             scanf("%d", &chave);
             chave = ((chave % 26) + 26) % 26;  // Normaliza a chave
-        } else if (opcao == 3) {
+        } else if (subopcao == 3) {
             chave = rand() % 25 + 1;  // 1 a 25
             printf("\nChave aleatoria gerada: %d\n", chave);
         }
         
-        if (opcao == 1 || opcao == 3) {
+        if (subopcao == 1 || subopcao == 3) {
             criptografar(texto, chave);
             if (!salvar_arquivo("texto_criptografado.txt", texto)) {
                 printf("Erro ao salvar arquivo criptografado!\n");
                 continue;
             }
             printf("\nResultado salvo em: texto_criptografado.txt\n");
-        } else if (opcao == 2) {
+        } else if (subopcao == 2) {
             descriptografar(texto, chave);
             if (!salvar_arquivo("texto_descriptografado.txt", texto)) {
                 printf("Erro ao salvar arquivo descriptografado!\n");
@@ -188,7 +187,7 @@ int main() {
 
         
         // Se usou chave aleatória, calcula e mostra frequências
-        if (opcao == 3) {
+        if (subopcao == 3) {
             calcular_frequencias(texto, frequencias);
             
             printf("\nFrequencias encontradas:\n");
@@ -207,4 +206,4 @@ int main() {
     }
     
     return 0;
-}
+}*/

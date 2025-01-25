@@ -59,7 +59,10 @@ void KMP(char* texto, char* padrao) {
                 i++;                  // Avança no texto
         }
     }
-    
+
+    if (ocorrencias == 0) {
+        printf("\nPadrão não encontrado no texto.\n");
+    }
     // Calcula e mostra tempo gasto
     clock_t fim = clock();
     double tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
@@ -67,7 +70,7 @@ void KMP(char* texto, char* padrao) {
     // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
     FILE *arquivo = fopen("/home/leticia/TP3-PAA/Grafico/dadosKMP.txt", "a+");
     if (arquivo == NULL) {
-        printf("Erro ao abrir o arquivo!\n");
+        printf("\nErro ao abrir o arquivo para construcao do grafico!\n");
         return;
     }
 
