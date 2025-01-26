@@ -196,8 +196,9 @@ int main() {
             scanf("%d", &opcao_grafico);
             if(opcao_grafico == 1){
                 printf("Digite o nome do arquivo de texto: ");
-                fgets(nomeArquivo, sizeof(nomeArquivo), stdin);
+                scanf(" %[^\n]s", nomeArquivo);   // Lê linha inteira incluindo espaços
                 nomeArquivo[strcspn(nomeArquivo, "\n")] = 0;  // Remove newline
+
 
                 // Verifica se o nome do arquivo está vazio
                 if (strcmp(nomeArquivo, "") == 0) {
