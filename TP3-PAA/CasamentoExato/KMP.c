@@ -1,7 +1,7 @@
 #include "KMP.h"
 
 // Função auxiliar do KMP que computa a tabela de prefixos-sufixos
-void computaLPS(char* padrao, int M, int* lps) {
+void computaTabela(char* padrao, int M, int* lps) {
     int tamanhoPref = 0;        // Tamanho do prefixo anterior
     lps[0] = 0;         // LPS significa Longest Prefix Suffix, é o vetor que armazena o tamanho do maior prefixo que também é sufixo
     int i = 1;          // Começa do segundo caractere
@@ -35,7 +35,7 @@ void KMP(char* texto, char* padrao, int opcao) {
     // Aloca e computa tabela LPS
     // LPS significa Longest Prefix Suffix, é o vetor que armazena o tamanho do maior prefixo que também é sufixo
     int* lps = (int*)malloc(M * sizeof(int));
-    computaLPS(padrao, M, lps);
+    computaTabela(padrao, M, lps);
     
     int i = 0;  // Índice para percorrer o texto
     int j = 0;  // Índice para percorrer o padrão

@@ -7,7 +7,7 @@
 #include <stdlib.h>   // Para alocação dinâmica (malloc, free)
 #include <time.h>     // Para medir tempo de execução
 
-void computaLPS(char* padrao, int M, int* lps);
+void computaTabela(char* padrao, int M, int* lps);
 void KMP(char* texto, char* padrao, int opcao);
 
 #endif 

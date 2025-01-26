@@ -36,6 +36,7 @@ void forcaBruta(char* texto, char* padrao, int opcao) {
     printf("------------------------------------\n");
     printf("Tempo Força Bruta: %f segundos\n", tempo);
     printf("Total de ocorrências: %d\n", ocorrencias);
+    // Se opcao == 1, salva os dados para construção do gráfico
     if (opcao == 1) {
         // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
         FILE *arquivo = fopen("Grafico/dadosForcaBruta.txt", "a+");
