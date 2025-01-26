@@ -111,7 +111,7 @@ char* carregaTexto(const char* nomeArquivo) {
 }
 
 // Função para execultar o casamento de cada arquivo de um diretório
-void preencheGrafico(char *diretorio, char *padrao) {
+int preencheGrafico(char *diretorio, char *padrao) {
     DIR *d;  // Ponteiro para o diretório
     struct dirent *dir;  // Estrutura para armazenar informações dos arquivos
 
@@ -158,6 +158,9 @@ void preencheGrafico(char *diretorio, char *padrao) {
             system("clear");
         }
         closedir(d);  // Fecha o diretório
+        return 0;
+    } else {
+        return 1;
     }
 }
 
@@ -270,8 +273,11 @@ int main() {
                 }
 
                 removeAcentosPontuacao(padrao); // Remove acentos e pontuação do padrão
-                preencheGrafico(diretorio, padrao);
-                printf("Diretório executado com sucesso! \n");
+                if(preencheGrafico(diretorio, padrao)){
+                    printf("Erro ao abrir o diretório! \n");
+                } else {
+                    printf("Diretório executado com sucesso! \n");
+                }
                 printf("Pressione Enter para continuar... \n");
                 getchar();
                 getchar();
