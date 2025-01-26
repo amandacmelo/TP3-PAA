@@ -1,6 +1,6 @@
 #include "ForcaBruta.h"
 // Algoritmo de Força Bruta
-void forcaBruta(char* texto, char* padrao) {
+void forcaBruta(char* texto, char* padrao, int opcao) {
 
     clock_t inicio = clock();    // Marca o tempo inicial
     int N = strlen(texto);       // Obtém tamanho do texto
@@ -34,21 +34,21 @@ void forcaBruta(char* texto, char* padrao) {
     double tempo = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
 
     printf("------------------------------------\n");
-    printf("Tempo KMP: %f segundos\n", tempo);
+    printf("Tempo Força Bruta: %f segundos\n", tempo);
     printf("Total de ocorrências: %d\n", ocorrencias);
+    if (opcao == 1) {
+        // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
+        FILE *arquivo = fopen("Grafico/dadosForcaBruta.txt", "a+");
+        if (arquivo == NULL) {
+            printf("\nErro ao abrir o arquivo para construcao do grafico!\n");
+            return;
+        }
 
-    // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
-    FILE *arquivo = fopen("Grafico/grafico.py", "a+");
-    if (arquivo == NULL) {
-        printf("\nErro ao abrir o arquivo para construcao do grafico!\n");
-        return;
+        // Escreve o tamanho do texto e o tempo no arquivo
+        fprintf(arquivo, "%d %f\n", N, tempo);
+
+        // Fecha o arquivo
+        fclose(arquivo);
     }
-
-    // Escreve o tamanho do texto e o tempo no arquivo
-    fprintf(arquivo, "%d %f\n", N, tempo);
-
-    // Fecha o arquivo
-    fclose(arquivo);
-
 }
 

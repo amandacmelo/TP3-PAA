@@ -8,6 +8,6 @@
 #include <time.h>     // Para medir tempo de execução
 
 void computaLPS(char* padrao, int M, int* lps);
-void KMP(char* texto, char* padrao);
+void KMP(char* texto, char* padrao, int opcao);
 
 #endif 

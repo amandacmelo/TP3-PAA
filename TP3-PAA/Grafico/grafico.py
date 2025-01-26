@@ -27,6 +27,11 @@ except ValueError:
 except FileNotFoundError:
     print("Erro: Arquivo não encontrado. Verifique se o caminho está correto.")
 
+# Ordenar os dados pelo tamanho do texto
+dados = list(zip(tamanhos, tempos_KMP, tempos_ForcaBruta))
+dados.sort()
+tamanhos, tempos_KMP, tempos_ForcaBruta = zip(*dados)
+
 # Criar o gráfico
 plt.figure(figsize=(10, 6)) #define o tamanho do gráfico
 

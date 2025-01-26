@@ -8,6 +8,6 @@
 #include <time.h>     // Para medir tempo de execução
 
 
-void forcaBruta(char* texto, char* padrao);
+void forcaBruta(char* texto, char* padrao, int opcao);
 
 #endif 

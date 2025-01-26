@@ -1,14 +1,13 @@
-
 #include <stdio.h>    // Para funções de entrada/saída
 #include <string.h>   // Para manipulação de strings (strlen)
 #include <stdlib.h>   // Para alocação dinâmica (malloc, free)
 #include <time.h>     // Para medir tempo de execução
 #include <unistd.h>   // Para função sleep
-#include <ctype.h>     // Funções para manipulação de caracteres (ispunct, tolower)
+#include <ctype.h>    // Funções para manipulação de caracteres (ispunct, tolower)
+#include <dirent.h> 
 #include "CasamentoExato/ForcaBruta.h"
 #include "CasamentoExato/KMP.h"
 #include "CifraDeslocamento/CifraDeslocamento.h"
-
 
 void removeAcentosPontuacao(char *str) {
     // Mapeamento de caracteres acentuados para seus equivalentes sem acento
@@ -70,7 +69,6 @@ void removeAcentosPontuacao(char *str) {
     strcpy(str, resultado);
 }
 
-
 // Função para ler arquivo de texto
 char* carregaTexto(const char* nomeArquivo) {
     // Tenta abrir o arquivo
@@ -85,10 +83,13 @@ char* carregaTexto(const char* nomeArquivo) {
     long tamanho = ftell(arquivo);    // Pega posição atual, fim do arquivo(tamanho)
     rewind(arquivo);                  // Volta para o início
     
+
     // Aloca memória para o texto
     char* texto = (char*)malloc(tamanho + 1); // +1 para o terminador de string e evitar erros
     if (texto == NULL) {
         printf("Erro de alocação de memória\n");
+        sleep(1.5);
+        system("clear");
         fclose(arquivo);
         return NULL;
     }
@@ -97,6 +98,8 @@ char* carregaTexto(const char* nomeArquivo) {
     size_t resultado = fread(texto, 1, tamanho, arquivo); 
     if (resultado != tamanho) { // Verifica se leu tudo que era esperado
         printf("Erro ao ler o arquivo\n");
+        sleep(1.5);
+        system("clear");
         free(texto);
         fclose(arquivo);
         return NULL;
@@ -105,6 +108,57 @@ char* carregaTexto(const char* nomeArquivo) {
     texto[tamanho] = '\0';  // Adiciona terminador de string
     fclose(arquivo);        // Fecha arquivo
     return texto;
+}
+
+// Função para execultar o casamento de cada arquivo de um diretório
+void preencheGrafico(char *diretorio, char *padrao) {
+    DIR *d;  // Ponteiro para o diretório
+    struct dirent *dir;  // Estrutura para armazenar informações dos arquivos
+
+    d = opendir(diretorio);  // Abre o diretório
+    if (d) {  // Verifica se o diretório foi aberto com sucesso
+        while ((dir = readdir(d)) != NULL) {  // Lê cada entrada do diretório
+                
+            // Pule diretórios e entradas vazias
+            if (strcmp(dir->d_name, ".") == 0 || 
+                strcmp(dir->d_name, "..") == 0 || 
+                dir->d_name[0] == '\0') {
+                continue;
+            }
+
+            // Constrói o caminho completo do arquivo
+            char caminhoArquivo[1024];
+            snprintf(caminhoArquivo, sizeof(caminhoArquivo), "%s/%s", diretorio, dir->d_name);
+            printf("Arquivo: %s\n", dir->d_name);
+            
+            // Carrega texto do arquivo
+            char* texto = carregaTexto(caminhoArquivo);
+            if (texto == NULL) {
+                printf("Erro: Arquivo nao encontrado!\n");
+                sleep(1.5);
+                system("clear");
+                closedir(d);
+                continue;
+            }
+            removeAcentosPontuacao(texto);  // Remove acentos e pontuação do texto
+
+            // Executa os dois algoritmos
+            printf("\n===== Busca usando Força Bruta =====\n");
+            forcaBruta(texto, padrao, 1);
+            printf("====================================\n");
+            printf("\n========= Busca usando KMP =========\n");
+            KMP(texto, padrao, 1);
+            printf("===================================\n");
+            
+              
+            free(texto);  // Libera a memória alocada para o texto
+            printf("Pressione Enter para continuar... \n");
+            getchar();
+            getchar();
+            system("clear");
+        }
+        closedir(d);  // Fecha o diretório
+    }
 }
 
 // Função principal
@@ -133,61 +187,93 @@ int main() {
        
         switch (opcao){
         case 1:{
-            
+            int opcao_grafico;
             char nomeArquivo[100]; 
             char padrao[100];  
             printf("\n----------- CASAMENTO DE PADROES -----------\n");
-            printf("Digite o nome do arquivo de texto: ");
-            fgets(nomeArquivo, sizeof(nomeArquivo), stdin);
-            nomeArquivo[strcspn(nomeArquivo, "\n")] = 0;  // Remove newline
+            printf("1. Carregar arquivo de texto\n");
+            printf("2. Carregar diretorio para gerar dados para o gráfico\n");
+            scanf("%d", &opcao_grafico);
+            if(opcao_grafico == 1){
+                printf("Digite o nome do arquivo de texto: ");
+                fgets(nomeArquivo, sizeof(nomeArquivo), stdin);
+                nomeArquivo[strcspn(nomeArquivo, "\n")] = 0;  // Remove newline
 
-            // Verifica se o nome do arquivo está vazio
+                // Verifica se o nome do arquivo está vazio
+                if (strcmp(nomeArquivo, "") == 0) {
+                    printf("Por favor, carregue antes um arquivo de dados! \n");
+                    printf("Pressione qualquer tecla para continuar... \n");
+                    getchar(); 
+                    system("clear");
+                    continue;
+                }
+                        
+                // Lê padrão a ser buscado
+                printf("Digite o padrão a ser buscado: ");
+                scanf(" %[^\n]s", padrao);   // Lê linha inteira incluindo espaços
+                printf("--------------------------------------------\n");
+
+                // Verifica se o nome do arquivo está vazio
             if (strcmp(nomeArquivo, "") == 0) {
-                printf("Por favor, carregue antes um arquivo de dados! \n");
-                printf("Pressione qualquer tecla para continuar... \n");
-                getchar(); 
-                system("clear");
-                continue;
-            }
-                    
-            // Lê padrão a ser buscado
-            printf("Digite o padrão a ser buscado: ");
-            scanf(" %[^\n]s", padrao);   // Lê linha inteira incluindo espaços
-            printf("--------------------------------------------\n");
+                    printf("Por favor, carregue antes um arquivo de dados! \n");
+                    printf("Pressione qualquer tecla para continuar... \n");
+                    getchar(); 
+                    system("clear");
+                    continue;
+                }   
+                // Carrega texto do arquivo
+                char* texto = carregaTexto(nomeArquivo);
+                if (texto == NULL) {
+                    printf("Erro: Arquivo nao encontrado!\n");
+                    sleep(1.5);
+                    system("clear");
+                    continue;
+                }
 
-            // Verifica se o nome do arquivo está vazio
-           if (strcmp(nomeArquivo, "") == 0) {
-                printf("Por favor, carregue antes um arquivo de dados! \n");
-                printf("Pressione qualquer tecla para continuar... \n");
-                getchar(); 
-                system("clear");
-                continue;
-            }   
-            // Carrega texto do arquivo
-            char* texto = carregaTexto(nomeArquivo);
-            if (texto == NULL) {
-                printf("Erro: Arquivo nao encontrado!\n");
-                sleep(1.5);
-                system("clear");
-                continue;
-            }
-
-            removeAcentosPontuacao(texto);  // Remove acentos e pontuação do texto
-            removeAcentosPontuacao(padrao); // Remove acentos e pontuação do padrão
-        
+                removeAcentosPontuacao(texto);  // Remove acentos e pontuação do texto
+                removeAcentosPontuacao(padrao); // Remove acentos e pontuação do padrão
             
-            // Executa os dois algoritmos
-            printf("\n===== Busca usando Força Bruta =====\n");
-            forcaBruta(texto, padrao);
-            printf("====================================\n");
-            printf("\n========= Busca usando KMP =========\n");
-            KMP(texto, padrao);
-            printf("===================================\n");
-            free(texto);
-            printf("Pressione Enter para continuar... \n");
-            getchar();
-            getchar();
-            system("clear");
+                
+                // Executa os dois algoritmos
+                printf("\n===== Busca usando Força Bruta =====\n");
+                forcaBruta(texto, padrao, 0);
+                printf("====================================\n");
+                printf("\n========= Busca usando KMP =========\n");
+                KMP(texto, padrao, 0);
+                printf("===================================\n");
+                free(texto);
+                printf("Pressione Enter para continuar... \n");
+                getchar();
+                getchar();
+                system("clear");
+            } else if(opcao_grafico == 2){
+                char diretorio[100];
+                printf("Digite o nome do diretorio: ");
+                scanf(" %[^\n]s", diretorio);   // Lê linha inteira incluindo espaços
+                diretorio[strcspn(diretorio, "\n")] = 0;  // Remove newline
+
+                // Lê padrão a ser buscado
+                printf("Digite o padrão a ser buscado: ");
+                scanf(" %[^\n]s", padrao);   // Lê linha inteira incluindo espaços
+                printf("--------------------------------------------\n");
+
+                // Verifica se o nome do diretório está vazio
+                if (strcmp(diretorio, "") == 0) {
+                    printf("Por favor, carregue antes um diretório de dados! \n");
+                    printf("Pressione qualquer tecla para continuar... \n");
+                    getchar(); 
+                    system("clear");
+                    continue;
+                }
+
+                removeAcentosPontuacao(padrao); // Remove acentos e pontuação do padrão
+                preencheGrafico(diretorio, padrao);
+                printf("Diretório execultado com sucesso! \n");
+                printf("Pressione Enter para continuar... \n");
+                getchar();
+                getchar();
+                system("clear");
+            }
             break;
         }
         case 2:

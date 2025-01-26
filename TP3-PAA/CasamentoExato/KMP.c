@@ -26,7 +26,7 @@ void computaLPS(char* padrao, int M, int* lps) {
 }
 
 // Algoritmo KMP principal
-void KMP(char* texto, char* padrao) {
+void KMP(char* texto, char* padrao, int opcao) {
     clock_t inicio = clock();    // Marca tempo inicial
     int N = strlen(texto);       // Tamanho do texto
     int M = strlen(padrao);      // Tamanho do padrão
@@ -71,18 +71,19 @@ void KMP(char* texto, char* padrao) {
     printf("------------------------------------\n");
     printf("Tempo KMP: %f segundos\n", tempo);
     printf("Total de ocorrências: %d\n", ocorrencias);
+    if(opcao){
+        // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
+        FILE *arquivo = fopen("Grafico/dadosKMP.txt", "a+");
+        if (arquivo == NULL) {
+            printf("\nErro ao abrir o arquivo para construcao do grafico!\n");
+            return;
+        }
 
-    // Abre o arquivo para escrita (append), cria um novo arquivo se não existir
-    FILE *arquivo = fopen("Grafico/grafico.py", "a+");
-    if (arquivo == NULL) {
-        printf("\nErro ao abrir o arquivo para construcao do grafico!\n");
-        return;
-    }
-
-    // Escreve o tamanho do texto e o tempo no arquivo
-    fprintf(arquivo, "%d %f\n", N, tempo);
-
-    // Fecha o arquivo
-    fclose(arquivo);
+        // Escreve o tamanho do texto e o tempo no arquivo
+        fprintf(arquivo, "%d %f\n", N, tempo);
+        // Fecha o arquivo
+        fclose(arquivo);
+    }   
+    
     free(lps);  // Libera memória da tabela LPS
 }
