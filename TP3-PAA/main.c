@@ -193,6 +193,8 @@ int main() {
             printf("\n----------- CASAMENTO DE PADROES -----------\n");
             printf("1. Carregar arquivo de texto\n");
             printf("2. Carregar diretorio para gerar dados para o gráfico\n");
+            printf("--------------------------------------------\n");
+            printf("Escolha uma opção: ");
             scanf("%d", &opcao_grafico);
             if(opcao_grafico == 1){
                 printf("Digite o nome do arquivo de texto: ");
@@ -269,7 +271,7 @@ int main() {
 
                 removeAcentosPontuacao(padrao); // Remove acentos e pontuação do padrão
                 preencheGrafico(diretorio, padrao);
-                printf("Diretório execultado com sucesso! \n");
+                printf("Diretório executado com sucesso! \n");
                 printf("Pressione Enter para continuar... \n");
                 getchar();
                 getchar();
